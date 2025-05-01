@@ -4,6 +4,6 @@ class StoreController {
   }
 }
 
-const storeController = new StoreController();
+const storeController = new StoreController()
 
-export default storeController;
+export default storeController

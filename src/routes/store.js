@@ -1,8 +1,8 @@
-import { Router } from 'express';
-import storeController from '../controllers/StoreController.js';
+import { Router } from 'express'
+import storeController from '../controllers/StoreController.js'
 
-const router = Router();
+const router = Router()
 
-router.post('/', storeController.add);
+router.post('/', storeController.add)
 
-export default router;
+export default router
