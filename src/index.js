@@ -4,6 +4,7 @@ import cors from 'cors'
 
 import connectDatabase from './config/database.js'
 import authRouter from './routes/auth.js'
+import usersRouter from './routes/user.js'
 
 const app = express()
 
@@ -13,7 +14,8 @@ const app = express()
   app.use(cors())
   app.use(express.json())
 
-  app.use(authRouter)
+  app.use(authRouter);
+  app.use('/users', usersRouter);
 
   await connectDatabase()
 
