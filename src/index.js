@@ -16,7 +16,7 @@ const app = express()
   app.use(cors())
   app.use(express.json())
 
-  app.use(authRouter)
+  app.use('/auth',authRouter)
   app.use('/users', usersRouter)
   app.use('/stores', storeRouter)
   app.use('/products', productsRouter)
@@ -24,6 +24,11 @@ const app = express()
   await connectDatabase()
 
   const port = process.env.PORT || 3000
+
+  app.get('/', (req, res) => {
+    res.send('API Sales Catalog está online!');
+  });
+  
   app.listen(port, () => {
     console.log(`😎 O sistema está executando em http://localhost:${port}`)
   })
