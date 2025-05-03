@@ -17,7 +17,6 @@ class ProductsController {
       });
 
       return res.status(201).json({
-        message: 'Produto cadastrado com sucesso!',
         produto: novoProduto
       });
 
