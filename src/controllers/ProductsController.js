@@ -9,7 +9,6 @@ class ProductsController {
     }
 
     try{
-
       const novoProduto = await Product.create({
         nome,
         imagem,
@@ -23,8 +22,6 @@ class ProductsController {
     } catch(error){
       return res.status(500).json({ message: "Erro interno no servidor.", error });
     }
-
-    return res.json()
   }
 }
 
