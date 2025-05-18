@@ -81,6 +81,7 @@ web_modules/
 
 # Pasta de uploads (mas mantém a pasta uploads)
 imagens/**
+!imagens/
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
