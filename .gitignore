@@ -79,6 +79,10 @@ web_modules/
 .env.production.local
 .env.local
 
+# Pasta de uploads (mas mantém a pasta uploads)
+uploads/**
+!uploads/
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache

@@ -1,55 +1,65 @@
 import Product from '../models/Product.js';
+import fs from 'fs';
+import path from 'path';
 
 class ProductsController {
-  async add(req, res) {
-    const { nome, imagem, preco } = req.body;
+ async add(req, res) {
+    try {
+      const { nome, preco } = req.body;
+      const imagem = req.file?.filename;
 
-    if (!nome || !imagem || !preco) {
-      return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
-    }
+      if (!nome || !imagem || !preco) {
+        return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
+      }
 
-    try{
       const novoProduto = await Product.create({
         nome,
         imagem,
         preco
       });
 
-      return res.status(201).json({
-        produto: novoProduto
-      });
-
-    } catch(error){
-      return res.status(500).json({ message: "Erro interno no servidor.", error });
+      return res.status(201).json({ produto: novoProduto });
+    } catch (error) {
+      return res.status(500).json({ message: 'Erro interno no servidor.', error: error.message });
     }
   }
 
-   async update(req, res) {
+    async update(req, res) {
     try {
       const { id } = req.params;
-      const { nome, imagem, preco } = req.body;
+      const { nome, preco } = req.body;
+      const novaImagem = req.file?.filename;
 
-      const updateData = {};
-      if (nome) updateData.nome = nome;
-      if (imagem) updateData.imagem = imagem;
-      if (preco !== undefined) updateData.preco = preco;
-
-      const produtoAtualizado = await Product.findByIdAndUpdate(id, updateData, { new: true });
-
-      if (!produtoAtualizado) {
+      const produto = await Product.findById(id);
+      if (!produto) {
         return res.status(404).json({ message: 'Produto não encontrado.' });
       }
 
+      const updateData = {};
+      if (nome) updateData.nome = nome;
+      if (preco !== undefined) updateData.preco = preco;
+
+      if (novaImagem && novaImagem !== produto.imagem) {
+        const oldImagePath = path.join('uploads', produto.imagem);
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlinkSync(oldImagePath);
+        }
+        updateData.imagem = novaImagem;
+      }
+
+      const produtoAtualizado = await Product.findByIdAndUpdate(id, updateData, { new: true });
+
       return res.status(200).json(produtoAtualizado.toObject());
     } catch (error) {
-      return res.status(500).json({ message: "Erro ao atualizar produto.", error: error.message });
+      return res.status(500).json({ message: 'Erro ao atualizar produto.', error: error.message });
     }
   }
+
 
   async list(req, res) {
     try {
       const produtos = await Product.find().sort({ createdAt: -1 });
-      return res.status(200).json({ produtos });
+      return res.status(200).json(produtos);
     } catch (error) {
       return res.status(500).json({ message: 'Erro ao buscar produtos.', error: error.message });
     }
