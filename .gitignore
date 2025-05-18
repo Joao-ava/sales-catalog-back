@@ -136,7 +136,5 @@ dist
 .pnp.*
 
 #uploads
-/uploads/*.png
+*.png
 
-
-C:\Users\ADM\Downloads\sales-catalog-back\uploads\1747538373919.png
