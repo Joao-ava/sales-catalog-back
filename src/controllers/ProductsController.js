@@ -45,6 +45,15 @@ class ProductsController {
       return res.status(500).json({ message: "Erro ao atualizar produto.", error: error.message });
     }
   }
+
+  async list(req, res) {
+    try {
+      const produtos = await Product.find().sort({ createdAt: -1 });
+      return res.status(200).json({ produtos });
+    } catch (error) {
+      return res.status(500).json({ message: 'Erro ao buscar produtos.', error: error.message });
+    }
+  }
 }
 
 const productsController = new ProductsController()
