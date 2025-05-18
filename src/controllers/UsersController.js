@@ -1,5 +1,8 @@
 import bcryptjs from 'bcryptjs'
 import User from '../models/User.js'
+import jwt from 'jsonwebtoken';
+
+
 
 class UserController {
   async add(req, res) {
@@ -51,8 +54,38 @@ class UserController {
       return res.status(500).json({ error: 'Erro ao atualizar usuário.', details: error.message });
     }
   }
+
+
+  async login(req, res) {
+    try {
+      const SECRET = process.env.SECRET_KEY;
+      
+      const { email, password } = req.body;
+      if (!email || !password) {
+        return res.status(400).json({ error: 'Email e senha são obrigatórios.' });
+      }
+
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(401).json({ error: 'Usuário ou senha inválidos.' });
+      }
+
+      const isMatch = await bcryptjs.compare(password, user.passwordHash);
+      if (!isMatch) {
+        return res.status(401).json({ error: 'Usuário ou senha inválidos.' });
+      }
+
+      const token = jwt.sign({ id: user._id }, SECRET, { expiresIn: '1d' });
+
+      const userObj = user.toObject();
+      delete userObj.passwordHash;
+
+      return res.json({ user: userObj, token });
+    } catch (error) {
+      return res.status(500).json({ error: 'Erro ao realizar login.', details: error.message });
+    }
+  }
 }
 
 const userController = new UserController();
-
 export default userController;

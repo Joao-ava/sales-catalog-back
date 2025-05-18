@@ -9,5 +9,7 @@ router.post('/', upload.single('imagem'), productsController.add)
 //router.put('/:id', productsController.update)
 router.put('/:id', upload.single('imagem'), productsController.update)
 router.get('/', productsController.list)
+router.get('/:id', productsController.getById)
+
 
 export default router

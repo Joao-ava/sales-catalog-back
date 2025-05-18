@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 class ProductsController {
- async add(req, res) {
+  async add(req, res) {
     try {
       const { nome, preco } = req.body;
       const imagem = req.file?.filename;
@@ -24,7 +24,7 @@ class ProductsController {
     }
   }
 
-    async update(req, res) {
+  async update(req, res) {
     try {
       const { id } = req.params;
       const { nome, preco } = req.body;
@@ -55,7 +55,6 @@ class ProductsController {
     }
   }
 
-
   async list(req, res) {
     try {
       const produtos = await Product.find().sort({ createdAt: -1 });
@@ -64,6 +63,20 @@ class ProductsController {
       return res.status(500).json({ message: 'Erro ao buscar produtos.', error: error.message });
     }
   }
+
+  async getById(req, res) {
+    try {
+      const { id } = req.params;
+      const products = await Product.findById(id);
+      if (!products) {
+        return res.status(404).json({ error: 'Produto não encontrado.' });
+      }
+      return res.status(200).json(products);
+    } catch (error) {
+      return res.status(500).json({ message: 'Erro ao buscar produto.', error: error.message });
+    }
+  }
+
 }
 
 const productsController = new ProductsController()

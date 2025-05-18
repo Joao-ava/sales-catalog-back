@@ -5,6 +5,7 @@ import upload from '../middlewares/upload.js';
 const router = Router()
 
 router.post('/', upload.single('imagem'), storeController.add);
+router.get('/', storeController.listStore);
 //router.post('/', storeController.add)
 //router.put('/:id', storeController.update)
 router.put('/:id', upload.single('imagem'), storeController.update);

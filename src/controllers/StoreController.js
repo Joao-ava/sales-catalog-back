@@ -6,18 +6,42 @@ class StoreController {
   async add(req, res) {
     try {
 
-      const { name, bloco, referencia } = req.body;
+      const { name, bloco, referencia, horarios } = req.body;
+
       const imagem = req.file?.filename;
 
-      if (!name || !bloco || !referencia || !imagem) {
+
+      if (!name || !bloco || !referencia || !imagem || !horarios) {
         return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
+      }
+
+
+      let horariosFormatado;
+      try {
+        horariosFormatado = typeof horarios === 'string' ? JSON.parse(horarios) : horarios;
+
+        if (!Array.isArray(horariosFormatado)) {
+          return res.status(400).json({ error: 'Horários devem ser um array de objetos.' });
+        }
+
+        for (const horario of horariosFormatado) {
+          if (!horario.dia || !horario.abertura || !horario.fechamento) {
+            return res.status(400).json({
+              error: 'Cada item em horários deve conter dia, abertura e fechamento.'
+            });
+          }
+        }
+
+      } catch (e) {
+        return res.status(400).json({ error: 'Horários em formato inválido.' });
       }
 
       const newStore = await Store.create({
         name,
         bloco,
         referencia,
-        imagem
+        imagem,
+        horarios: horariosFormatado
       });
 
       return res.status(201).json(newStore.toObject());
@@ -29,8 +53,8 @@ class StoreController {
  async update(req, res) {
   try {
     const { id } = req.params;
-    const { name, bloco, referencia } = req.body;
-    const newImagem = req.file?.filename;
+    const { name, bloco, referencia, horarios } = req.body;
+    const newImagem =  req.file?.filename;
 
     const store = await Store.findById(id);
     if (!store) {
@@ -42,7 +66,29 @@ class StoreController {
     if (bloco) updateData.bloco = bloco;
     if (referencia) updateData.referencia = referencia;
 
-   
+    if (horarios) {
+      let horariosFormatado;
+      try {
+        horariosFormatado = typeof horarios === 'string' ? JSON.parse(horarios) : horarios;
+
+        if (!Array.isArray(horariosFormatado)) {
+          return res.status(400).json({ error: 'Horários devem ser um array de objetos.' });
+        }
+
+        for (const horario of horariosFormatado) {
+          if (!horario.dia || !horario.abertura || !horario.fechamento) {
+            return res.status(400).json({
+              error: 'Cada item em horários deve conter dia, abertura e fechamento.'
+            });
+          }
+        }
+
+        updateData.horarios = horariosFormatado;
+      } catch (e) {
+        return res.status(400).json({ error: 'Horários em formato inválido.' });
+      }
+    }
+
     if (newImagem && newImagem !== store.imagem) {
      
       const oldImagePath = path.join('uploads', store.imagem);
@@ -59,7 +105,19 @@ class StoreController {
     return res.status(500).json({ error: 'Erro ao atualizar loja.', details: error.message });
   }
 }
+
+async listStore(req, res) {
+    try {
+      const stores = await Store.find().sort({ createdAt: -1 });
+      return res.status(200).json(stores);
+    } catch (error) {
+      return res.status(500).json({ message: 'Erro ao buscar lojas.', error: error.message });
+    }
+  }
+
 }
+
+
 
 const storeController = new StoreController()
 
