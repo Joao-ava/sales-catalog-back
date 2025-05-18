@@ -79,9 +79,8 @@ web_modules/
 .env.production.local
 .env.local
 
-# Pasta de uploads (mas mantém a pasta uploads)
-imagens/**
-!imagens/
+# apaga os arquivos da pasta imagens
+*.png
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
