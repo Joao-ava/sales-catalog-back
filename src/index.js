@@ -7,6 +7,7 @@ import authRouter from './routes/auth.js'
 import usersRouter from './routes/user.js'
 import storeRouter from './routes/store.js'
 import productsRouter from './routes/product.js'
+import imagesRouter from './routes/imagem.js'
 
 const app = express()
 
@@ -20,6 +21,8 @@ const app = express()
   app.use('/users', usersRouter)
   app.use('/stores', storeRouter)
   app.use('/products', productsRouter)
+  app.use('/images', imagesRouter)
+  app.use('/uploads', express.static('uploads'))
 
   await connectDatabase()
 
