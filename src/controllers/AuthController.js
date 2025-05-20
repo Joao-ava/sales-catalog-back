@@ -1,8 +1,10 @@
+import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import bcrypt from 'bcryptjs';
 
 class AuthController {
   async auth(req, res) {
+    const SECRET = process.env.SECRET_KEY;
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -22,7 +24,9 @@ class AuthController {
         return res.status(401).json({ message: "Senha incorreta." });
       }
 
+      const token = jwt.sign({ id: usuario._id }, SECRET, { expiresIn: '1d' });
       return res.status(200).json({
+        token,
         message: "Login realizado com sucesso.",
         usuario: {
           id: usuario.id,
@@ -33,6 +37,7 @@ class AuthController {
       });
 
     } catch (error) {
+      console.log(error)
       return res.status(500).json({ message: "Erro interno no servidor.", error });
     }
   }
