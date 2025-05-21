@@ -7,8 +7,9 @@ const router = Router()
 
 router.post('/', authMiddleware, upload.single('imagem'), storeController.add);
 router.get('/', storeController.listStore);
+router.get('/my', authMiddleware, storeController.my);
 //router.post('/', storeController.add)
 //router.put('/:id', storeController.update)
-router.put('/:id', upload.single('imagem'), storeController.update);
+router.put('/:id', authMiddleware, upload.single('imagem'), storeController.update);
 
 export default router

@@ -52,7 +52,7 @@ class StoreController {
     }
   }
 
- async update(req, res) {
+  async update(req, res) {
   try {
     const { id } = req.params;
     const { name, bloco, referencia, horarios } = req.body;
@@ -78,7 +78,7 @@ class StoreController {
         }
 
         for (const horario of horariosFormatado) {
-          if (!horario.dia || !horario.abertura || !horario.fechamento) {
+          if (!horario.weekDay || !horario.from || !horario.to) {
             return res.status(400).json({
               error: 'Cada item em horários deve conter dia, abertura e fechamento.'
             });
@@ -97,7 +97,7 @@ class StoreController {
       if (fs.existsSync(oldImagePath)) {
         fs.unlinkSync(oldImagePath);
       }
-      updateData.imagem = newImagem;
+      updateData.imagem = `uploads/${newImagem}`;
     }
 
     const updatedStore = await Store.findByIdAndUpdate(id, updateData, { new: true });
@@ -106,9 +106,9 @@ class StoreController {
   } catch (error) {
     return res.status(500).json({ error: 'Erro ao atualizar loja.', details: error.message });
   }
-}
+  }
 
-async listStore(req, res) {
+  async listStore(req, res) {
     try {
       const stores = await Store.find().sort({ createdAt: -1 });
       const data = stores.map((item) => ({ ...item.toObject(), imagem: `${hostServer}/${item.imagem}` }))
@@ -118,6 +118,13 @@ async listStore(req, res) {
     }
   }
 
+  async my(req, res) {
+    const { storeId } = req.user
+    if (!storeId) return res.status(404).json({ message: 'Usuário sem loja' })
+    const store = await Store.findById(storeId)
+    const data = store.toObject()
+    return res.json({ ...data, imagem: `${hostServer}/${store.imagem}` })
+  }
 }
 
 
