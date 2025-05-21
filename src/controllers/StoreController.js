@@ -1,6 +1,8 @@
-import Store from '../models/Store.js';
 import path from 'path';
 import fs from 'fs';
+import User from '../models/User.js';
+import Store from '../models/Store.js';
+import { hostServer } from '../config/server.js';
 
 class StoreController {
   async add(req, res) {
@@ -9,7 +11,6 @@ class StoreController {
       const { name, bloco, referencia, horarios } = req.body;
 
       const imagem = req.file?.filename;
-
 
       if (!name || !bloco || !referencia || !imagem || !horarios) {
         return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
@@ -40,9 +41,10 @@ class StoreController {
         name,
         bloco,
         referencia,
-        imagem,
+        imagem: `uploads/${imagem}`,
         horarios: horariosFormatado
       });
+      await User.findByIdAndUpdate(req.user._id, { storeId: newStore._id })
 
       return res.status(201).json(newStore.toObject());
     } catch (error) {
@@ -109,7 +111,8 @@ class StoreController {
 async listStore(req, res) {
     try {
       const stores = await Store.find().sort({ createdAt: -1 });
-      return res.status(200).json(stores);
+      const data = stores.map((item) => ({ ...item.toObject(), imagem: `${hostServer}/${item.imagem}` }))
+      return res.status(200).json(data);
     } catch (error) {
       return res.status(500).json({ message: 'Erro ao buscar lojas.', error: error.message });
     }
