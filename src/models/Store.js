@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose'
+import mongoose from 'mongoose'
 
 const storeSchema = mongoose.Schema({
   name: { type: String, required: true },
@@ -6,11 +6,11 @@ const storeSchema = mongoose.Schema({
   referencia: { type: String, required: true},
   imagem: {type: String, required: true},
   horarios: [
-    {
-      dia: { type: String, required: true },
-      abertura: { type: String, required: true },
-      fechamento: { type: String, required: true }
-    }
+    mongoose.Schema({
+      weekDay: { type: String, required: true },
+      from: { type: String, required: true },
+      to: { type: String, required: true }
+    })
   ]
 });
 

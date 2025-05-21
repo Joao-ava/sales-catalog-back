@@ -26,7 +26,7 @@ class StoreController {
         }
 
         for (const horario of horariosFormatado) {
-          if (!horario.dia || !horario.abertura || !horario.fechamento) {
+          if (!horario.weekDay || !horario.from || !horario.to) {
             return res.status(400).json({
               error: 'Cada item em horários deve conter dia, abertura e fechamento.'
             });
