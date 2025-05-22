@@ -32,7 +32,7 @@ class AuthController {
           id: usuario.id,
           nome: usuario.name,
           email: usuario.email,
-          storedId: usuario.storedId
+          storeId: usuario.storeId
         }
       });
 
