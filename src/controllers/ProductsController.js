@@ -1,10 +1,12 @@
-import Product from '../models/Product.js';
 import fs from 'fs';
 import path from 'path';
+import Product from '../models/Product.js';
+import { hostServer } from '../config/server.js';
 
 class ProductsController {
   async add(req, res) {
     try {
+      const { storeId } = req.user;
       const { nome, preco } = req.body;
       const imagem = req.file?.filename;
 
@@ -14,8 +16,9 @@ class ProductsController {
 
       const novoProduto = await Product.create({
         nome,
-        imagem,
-        preco
+        imagem: `uploads/${imagem}`,
+        preco,
+        storeId
       });
 
       return res.status(201).json({ produto: novoProduto });
@@ -49,7 +52,10 @@ class ProductsController {
 
       const produtoAtualizado = await Product.findByIdAndUpdate(id, updateData, { new: true });
 
-      return res.status(200).json(produtoAtualizado.toObject());
+      return res.status(200).json({
+        ...produtoAtualizado.toObject(),
+        imagem: `${hostServer}/${produtoAtualizado.imagem}`
+      });
     } catch (error) {
       return res.status(500).json({ message: 'Erro ao atualizar produto.', error: error.message });
     }
@@ -58,7 +64,19 @@ class ProductsController {
   async list(req, res) {
     try {
       const produtos = await Product.find().sort({ createdAt: -1 });
-      return res.status(200).json(produtos);
+      const items = produtos.map((item) => ({ ...item.toObject(), imagem: `${hostServer}/${item.imagem}` }))
+      return res.status(200).json(items);
+    } catch (error) {
+      return res.status(500).json({ message: 'Erro ao buscar produtos.', error: error.message });
+    }
+  }
+
+  async listByStore(req, res) {
+    try {
+      const { storeId } = req.params;
+      const produtos = await Product.find({ storeId }).sort({ createdAt: -1 });
+      const items = produtos.map((item) => ({ ...item.toObject(), imagem: `${hostServer}/${item.imagem}` }))
+      return res.status(200).json(items);
     } catch (error) {
       return res.status(500).json({ message: 'Erro ao buscar produtos.', error: error.message });
     }
@@ -71,7 +89,7 @@ class ProductsController {
       if (!products) {
         return res.status(404).json({ error: 'Produto não encontrado.' });
       }
-      return res.status(200).json(products);
+      return res.status(200).json({ ...products.toObject(), imagem: `${hostServer}/${products.imagem}` });
     } catch (error) {
       return res.status(500).json({ message: 'Erro ao buscar produto.', error: error.message });
     }
