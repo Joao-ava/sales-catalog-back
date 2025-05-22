@@ -1,7 +1,5 @@
 import bcryptjs from 'bcryptjs'
 import User from '../models/User.js'
-import jwt from 'jsonwebtoken';
-
 
 
 class UserController {
