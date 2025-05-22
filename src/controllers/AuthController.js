@@ -30,7 +30,7 @@ class AuthController {
         message: "Login realizado com sucesso.",
         usuario: {
           id: usuario.id,
-          nome: usuario.name,
+          name: usuario.name,
           email: usuario.email,
           storeId: usuario.storeId
         }
