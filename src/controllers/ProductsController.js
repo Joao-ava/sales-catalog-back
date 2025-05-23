@@ -47,7 +47,7 @@ class ProductsController {
         if (fs.existsSync(oldImagePath)) {
           fs.unlinkSync(oldImagePath);
         }
-        updateData.imagem = novaImagem;
+        updateData.imagem = `uploads/${novaImagem}`;
       }
 
       const produtoAtualizado = await Product.findByIdAndUpdate(id, updateData, { new: true });
