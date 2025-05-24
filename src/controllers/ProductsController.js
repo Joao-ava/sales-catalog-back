@@ -95,6 +95,20 @@ class ProductsController {
     }
   }
 
+  async delete(req, res) {
+    try {
+      const { id } = req.params;
+      const products = await Product.findById(id);
+      if (!products) {
+        return res.status(404).json({ error: 'Produto não encontrado.' });
+      }
+      await Product.deleteOne({ _id: id });
+      return res.status(204).json();
+    } catch (error) {
+      return res.status(500).json({ message: 'Erro ao deletar produto.', error: error.message });
+    }
+  }
+
 }
 
 const productsController = new ProductsController()

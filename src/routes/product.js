@@ -11,6 +11,7 @@ router.post('/', authMiddleware, upload.single('imagem'), productsController.add
 router.put('/:id', upload.single('imagem'), productsController.update)
 router.get('/', productsController.list)
 router.get('/:id', productsController.getById)
+router.delete('/:id', productsController.delete)
 
 
 export default router
