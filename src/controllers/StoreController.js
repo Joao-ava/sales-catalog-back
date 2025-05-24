@@ -8,7 +8,7 @@ class StoreController {
   async add(req, res) {
     try {
 
-      const { name, bloco, referencia, horarios } = req.body;
+      const { name, bloco, referencia, horarios, lat, lng } = req.body;
 
       const imagem = req.file?.filename;
 
@@ -42,7 +42,9 @@ class StoreController {
         bloco,
         referencia,
         imagem: `uploads/${imagem}`,
-        horarios: horariosFormatado
+        horarios: horariosFormatado,
+        lat,
+        lng
       });
       await User.findByIdAndUpdate(req.user._id, { storeId: newStore._id })
 
@@ -55,7 +57,7 @@ class StoreController {
   async update(req, res) {
   try {
     const { id } = req.params;
-    const { name, bloco, referencia, horarios } = req.body;
+    const { name, bloco, referencia, horarios, lat, lng } = req.body;
     const newImagem =  req.file?.filename;
 
     const store = await Store.findById(id);
@@ -67,6 +69,8 @@ class StoreController {
     if (name) updateData.name = name;
     if (bloco) updateData.bloco = bloco;
     if (referencia) updateData.referencia = referencia;
+    if (lat) updateData.lat = lat;
+    if (lng) updateData.lng = lng;
 
     if (horarios) {
       let horariosFormatado;

@@ -5,6 +5,8 @@ const storeSchema = mongoose.Schema({
   bloco: { type: String, required: true },
   referencia: { type: String, required: true},
   imagem: {type: String, required: true},
+  lat: Number,
+  lng: Number,
   horarios: [
     mongoose.Schema({
       weekDay: { type: String, required: true },
