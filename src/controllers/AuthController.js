@@ -41,6 +41,16 @@ class AuthController {
       return res.status(500).json({ message: "Erro interno no servidor.", error });
     }
   }
+
+  async my(req, res) {
+    const usuario = req.user;
+    return res.json({
+      id: usuario._id,
+      name: usuario.name,
+      email: usuario.email,
+      storeId: usuario.storeId
+    });
+  }
 }
 
 const authController = new AuthController();
