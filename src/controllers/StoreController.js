@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import User from '../models/User.js';
 import Store from '../models/Store.js';
-import { hostServer } from '../config/server.js';
+import { storeAdapter } from '../utils/storeAdapter.js';
 
 class StoreController {
   async add(req, res) {
@@ -115,7 +115,7 @@ class StoreController {
   async listStore(req, res) {
     try {
       const stores = await Store.find().sort({ createdAt: -1 });
-      const data = stores.map((item) => ({ ...item.toObject(), imagem: `${hostServer}/${item.imagem}` }))
+      const data = stores.map(storeAdapter)
       return res.status(200).json(data);
     } catch (error) {
       return res.status(500).json({ message: 'Erro ao buscar lojas.', error: error.message });
@@ -126,8 +126,7 @@ class StoreController {
     const { storeId } = req.user
     if (!storeId) return res.status(404).json({ message: 'Usuário sem loja' })
     const store = await Store.findById(storeId)
-    const data = store.toObject()
-    return res.json({ ...data, imagem: `${hostServer}/${store.imagem}` })
+    return res.json(storeAdapter(data))
   }
 }
 
