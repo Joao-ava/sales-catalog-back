@@ -6,10 +6,14 @@ const authMiddleware = async (req, res, next) => {
   if (!auth) return res.status(401).json({ message: 'Autenticação é necessaria' })
   
   const [_, token] = auth.split(' ')
-  const { id } = decode(token)
-  const user = await User.findById(id)
-  req.user = { ...user.toObject(), passwordHash: undefined }
-  next()
+  try {
+    const { id } = decode(token)
+    const user = await User.findById(id)
+    req.user = { ...user.toObject(), passwordHash: undefined }
+    next()
+  } catch (err) {
+    return res.status(401).json({ message: 'Login expirado' })
+  }
 }
 
 export default authMiddleware
