@@ -126,7 +126,7 @@ class StoreController {
     const { storeId } = req.user
     if (!storeId) return res.status(404).json({ message: 'Usuário sem loja' })
     const store = await Store.findById(storeId)
-    return res.json(storeAdapter(data))
+    return res.json(storeAdapter(store))
   }
 }
 
