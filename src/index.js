@@ -11,28 +11,27 @@ import imagesRouter from './routes/imagem.js'
 
 const app = express()
 
-;(async () => {
-  dotenv.config()
+dotenv.config()
 
-  app.use(cors())
-  app.use(express.json())
+app.use(cors())
+app.use(express.json())
 
-  app.use('/auth', authRouter)
-  app.use('/users', usersRouter)
-  app.use('/stores', storeRouter)
-  app.use('/products', productsRouter)
-  app.use('/images', imagesRouter)
-  app.use('/uploads', express.static('uploads'))
+app.use('/auth', authRouter)
+app.use('/users', usersRouter)
+app.use('/stores', storeRouter)
+app.use('/products', productsRouter)
+app.use('/images', imagesRouter)
+app.use('/uploads', express.static('uploads'))
 
-  await connectDatabase()
+connectDatabase()
 
-  const port = process.env.PORT || 3000
+const port = process.env.PORT || 3000
 
-  app.get('/', (req, res) => {
-    res.send('API Sales Catalog está online!');
-  });
-  
-  app.listen(port, () => {
-    console.log(`😎 O sistema está executando em http://localhost:${port}`)
-  })
-})()
+app.get('/', (req, res) => {
+  res.send('API Sales Catalog está online!');
+});
+
+// app.listen(port, () => {
+//   console.log(`😎 O sistema está executando em http://localhost:${port}`)
+// });
+export default app
