@@ -2,6 +2,8 @@ import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
 
+dotenv.config()
+
 import connectDatabase from './config/database.js'
 import authRouter from './routes/auth.js'
 import usersRouter from './routes/user.js'
@@ -11,7 +13,6 @@ import imagesRouter from './routes/imagem.js'
 
 const app = express()
 
-dotenv.config()
 
 app.use(cors())
 app.use(express.json())
