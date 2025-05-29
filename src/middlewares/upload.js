@@ -1,7 +1,7 @@
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
-import { uploadPath } from '../config/path';
+import { uploadPath } from '../config/path.js';
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
