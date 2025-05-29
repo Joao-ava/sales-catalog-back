@@ -23,7 +23,7 @@ app.use('/products', productsRouter)
 app.use('/images', imagesRouter)
 app.use('/uploads', express.static('uploads'))
 
-connectDatabase()
+await connectDatabase()
 
 const port = process.env.PORT || 3000
 
