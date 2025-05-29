@@ -3,6 +3,7 @@ import fs from 'fs';
 import User from '../models/User.js';
 import Store from '../models/Store.js';
 import { storeAdapter } from '../utils/storeAdapter.js';
+import { uploadPath } from '../config/path.js';
 
 class StoreController {
   async add(req, res) {
@@ -96,8 +97,7 @@ class StoreController {
     }
 
     if (newImagem && newImagem !== store.imagem) {
-     
-      const oldImagePath = path.join('uploads', store.imagem);
+      const oldImagePath = path.join(uploadPath, store.imagem);
       if (fs.existsSync(oldImagePath)) {
         fs.unlinkSync(oldImagePath);
       }

@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import Product from '../models/Product.js';
 import { hostServer } from '../config/server.js';
+import { uploadPath } from '../config/path.js';
 
 class ProductsController {
   async add(req, res) {
@@ -43,7 +44,7 @@ class ProductsController {
       if (preco !== undefined) updateData.preco = preco;
 
       if (novaImagem && novaImagem !== produto.imagem) {
-        const oldImagePath = path.join('uploads', produto.imagem);
+        const oldImagePath = path.join(uploadPath, produto.imagem);
         if (fs.existsSync(oldImagePath)) {
           fs.unlinkSync(oldImagePath);
         }
